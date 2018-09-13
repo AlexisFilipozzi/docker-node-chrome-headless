@@ -1,7 +1,5 @@
 FROM buildpack-deps:jessie
 
-MAINTAINER e-cloud <saintscott119@gmail.com>
-
 USER root
 
 ENV DUMB_VERSION 1.2.0
@@ -14,7 +12,7 @@ RUN apt-get update -qqy \
   && dpkg -i dumb-init_*.deb \
   && rm dumb-init_*.deb
 
-ENV NODE_VERSION 8.9.0
+ENV NODE_VERSION 8.12.0
 
 # install node.js
 RUN ARCH= && dpkgArch="$(dpkg --print-architecture)" \
@@ -47,26 +45,6 @@ RUN ARCH= && dpkgArch="$(dpkg --print-architecture)" \
     && tar -xJf "node-v$NODE_VERSION-linux-$ARCH.tar.xz" -C /usr/local --strip-components=1 \
     && rm "node-v$NODE_VERSION-linux-$ARCH.tar.xz" SHASUMS256.txt.asc SHASUMS256.txt \
     && ln -s /usr/local/bin/node /usr/local/bin/nodejs
-
-# install yarn
-ENV YARN_VERSION 1.3.2
-
-RUN for key in \
-    6A010C5166006599AA17F08146C2130DFD2497F5 \
-  ; do \
-    gpg --keyserver pgp.mit.edu --recv-keys "$key" || \
-    gpg --keyserver keyserver.pgp.com --recv-keys "$key" || \
-    gpg --keyserver ha.pool.sks-keyservers.net --recv-keys "$key" ; \
-  done \
-  && curl -fSLO --compressed "https://yarnpkg.com/downloads/$YARN_VERSION/yarn-v$YARN_VERSION.tar.gz" \
-  && curl -fSLO --compressed "https://yarnpkg.com/downloads/$YARN_VERSION/yarn-v$YARN_VERSION.tar.gz.asc" \
-  && gpg --batch --verify yarn-v$YARN_VERSION.tar.gz.asc yarn-v$YARN_VERSION.tar.gz \
-  && mkdir -p /opt/yarn \
-  && tar -xzf yarn-v$YARN_VERSION.tar.gz -C /opt/yarn --strip-components=1 \
-  && ln -s /opt/yarn/bin/yarn /usr/local/bin/yarn \
-  && ln -s /opt/yarn/bin/yarn /usr/local/bin/yarnpkg \
-  && rm yarn-v$YARN_VERSION.tar.gz.asc yarn-v$YARN_VERSION.tar.gz
-
 
 # Install Chrome
 RUN wget -q -O - https://dl-ssl.google.com/linux/linux_signing_key.pub | apt-key add - \
