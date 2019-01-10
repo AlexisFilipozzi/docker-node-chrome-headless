@@ -12,7 +12,7 @@ RUN apt-get update -qqy \
   && dpkg -i dumb-init_*.deb \
   && rm dumb-init_*.deb
 
-ENV NODE_VERSION 8.12.0
+ENV NODE_VERSION 10.15.0
 
 # install node.js
 RUN ARCH= && dpkgArch="$(dpkg --print-architecture)" \
